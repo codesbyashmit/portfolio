@@ -1,15 +1,13 @@
-'use client';
-
 import React from 'react';
 import { TerminalBio } from '@/components/TerminalBio';
 import { GlitchedHeroImage } from '@/components/GlitchedHeroImage';
-import { Home, User, Briefcase, Code2, Edit3, Mail, ArrowDown
-} from 'lucide-react';
+import { BottomStrip } from '@/components/BottomStrip';
+import { Home, User, Briefcase, Code2, Edit3, Mail, ArrowDown } from 'lucide-react';
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-zinc-200 font-mono flex selection:bg-purple-600 selection:text-white overflow-hidden">
-            <aside className="hidden lg:flex flex-col items-center justify-between py-6 w-14 border-r border-[#141417] bg-[#050505] fixed top-0 bottom-0 left-0 z-40">
+      <aside className="hidden lg:flex flex-col items-center justify-between py-6 w-14 border-r border-[#141417] bg-[#050505] fixed top-0 bottom-0 left-0 z-40">
         <div className="text-purple-500 font-black text-lg tracking-tight">AK/</div>
         <nav className="flex flex-col gap-6 text-zinc-600">
           <button className="text-purple-400 hover:text-purple-300 transition-colors"><Home size={16} /></button>
@@ -25,7 +23,7 @@ export default function LandingPage() {
         </div>
       </aside>
       <div className="flex-1 lg:pl-14 flex flex-col min-w-0 min-h-screen">
-                <header className="flex items-center justify-between px-6 lg:px-12 py-5 border-b border-[#141417] bg-[#050505]/90 backdrop-blur-md sticky top-0 z-30 h-[85px]">
+        <header className="flex items-center justify-between px-6 lg:px-12 py-5 border-b border-[#141417] bg-[#050505]/90 backdrop-blur-md sticky top-0 z-30 h-[85px]">
           <div className="flex items-center gap-10">
             <span className="lg:hidden text-purple-500 font-black text-lg">AK/</span>
             <nav className="hidden md:flex items-center gap-8 text-[11px] text-zinc-400 tracking-wider">
@@ -42,8 +40,8 @@ export default function LandingPage() {
           </button>
         </header>
         <section className="px-6 lg:px-12 pt-4 lg:pt-6 pb-12 w-full relative">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full relative">
-                        <div className="lg:col-span-4 space-y-6 z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full relative">
+            <div className="lg:col-span-4 space-y-6 z-10">
               <div className="inline-flex items-center gap-2 text-[10px] text-purple-400 tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-ping" />
                 // SYSTEM.STATUS: <span className="text-purple-400 font-bold">ONLINE</span>
@@ -59,7 +57,7 @@ export default function LandingPage() {
               <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed max-w-sm font-sans relative z-20">
                 Full Stack Developer crafting digital products that are <span className="text-white font-semibold">fast</span>, <span className="text-white font-semibold">scalable</span> and actually matter.
               </p>
-
+    
               <div className="flex items-center gap-6 pt-2 text-[11px] relative z-20">
                 <a href="#work" className="border border-purple-500/60 bg-purple-500/10 text-purple-300 px-6 py-3 hover:bg-purple-500 hover:text-black font-semibold transition-all">
                   {'>'} VIEW MY WORK
@@ -97,6 +95,8 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        <BottomStrip />
+        
       </div>
     </div>
   );
