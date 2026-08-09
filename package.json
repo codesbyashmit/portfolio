@@ -12,8 +12,10 @@
     "@aws-sdk/client-s3": "^3.1106.0",
     "@aws-sdk/s3-request-presigner": "^3.1106.0",
     "@neondatabase/serverless": "^1.1.0",
+    "cloudinary": "^2.10.0",
     "drizzle-orm": "^0.45.2",
     "next": "16.2.10",
+    "next-cloudinary": "^6.18.8",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
