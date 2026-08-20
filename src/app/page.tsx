@@ -3,6 +3,7 @@ import { TerminalBio } from '@/components/TerminalBio';
 import { GlitchedHeroImage } from '@/components/GlitchedHeroImage';
 import { BottomStrip } from '@/components/BottomStrip';
 import { Home, User, Briefcase, Code2, Edit3, Mail, ArrowDown } from 'lucide-react';
+import { AboutWorkSection } from '@/components/AboutWorkSection';
 
 export default function LandingPage() {
   return (
@@ -96,7 +97,7 @@ export default function LandingPage() {
           </div>
         </section>
         <BottomStrip />
-        
+        <AboutWorkSection />
       </div>
     </div>
   );

@@ -103,7 +103,7 @@ export const BottomStrip = async () => {
           <div className="flex justify-end pt-2">
             <div className="relative w-full h-20 opacity-100 hover:opacity-100 transition-opacity">
               <Image
-                src="https://res.cloudinary.com/nj4rcodl/image/upload/v1786275400/signature.png"
+                src="https://res.cloudinary.com/nj4rcodl/image/upload/v1786429482/copy_of_signature.png"
                 alt="Ashmit"
                 fill
                 className="object-contain object-right drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]"
