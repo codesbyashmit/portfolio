@@ -19,3 +19,13 @@ export const statusLogs = pgTable('status_logs', {
   isActive: boolean('is_active').default(true),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
+
+export const messages = pgTable('messages', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull(),
+  subject: text('subject').notNull(),
+  content: text('content').notNull(),
+  status: text('status').default('unread').notNull(), //unread, read, archived
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});

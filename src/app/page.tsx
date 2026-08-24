@@ -4,6 +4,10 @@ import { GlitchedHeroImage } from '@/components/GlitchedHeroImage';
 import { BottomStrip } from '@/components/BottomStrip';
 import { Home, User, Briefcase, Code2, Edit3, Mail, ArrowDown } from 'lucide-react';
 import { AboutWorkSection } from '@/components/AboutWorkSection';
+import { StackSection } from '@/components/StackSection';
+import { WorkSection } from '@/components/WorkSection';
+import { LogsSection } from '@/components/LogsSection';
+
 
 export default function LandingPage() {
   return (
@@ -97,7 +101,14 @@ export default function LandingPage() {
           </div>
         </section>
         <BottomStrip />
-        <AboutWorkSection />
+           <AboutWorkSection />
+<section id="work" className="px-6 lg:px-12 w-full mt-24 mb-17">
+           <WorkSection />
+        </section>   
+                <StackSection />
+                <section id="logs" className="px-6 lg:px-12 w-full mt-10 mb-20">
+           <LogsSection />
+        </section>
       </div>
     </div>
   );
