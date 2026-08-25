@@ -14,7 +14,7 @@ import {
   CalendarDays,
 } from 'lucide-react';
 
-const SHOW_PRIVATE_REPOS = false;
+const SHOW_PRIVATE_REPOS = true; 
 type RawCommit = {
   repoName: string;
   isPrivate: boolean;

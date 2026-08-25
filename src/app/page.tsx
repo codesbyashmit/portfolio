@@ -7,6 +7,7 @@ import { AboutWorkSection } from '@/components/AboutWorkSection';
 import { StackSection } from '@/components/StackSection';
 import { WorkSection } from '@/components/WorkSection';
 import { LogsSection } from '@/components/LogsSection';
+import { ContactSection } from '@/components/ContactSection';
 
 
 export default function LandingPage() {
@@ -108,6 +109,9 @@ export default function LandingPage() {
                 <StackSection />
                 <section id="logs" className="px-6 lg:px-12 w-full mt-10 mb-20">
            <LogsSection />
+        </section>
+        <section>
+          <ContactSection />
         </section>
       </div>
     </div>
