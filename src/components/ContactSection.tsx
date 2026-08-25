@@ -97,7 +97,7 @@ export const ContactSection = () => {
                         name="name" 
                         required 
                         disabled={status === 'loading' || status === 'success'}
-                        placeholder="John Doe"
+                        placeholder="Enter Your Name "
                         className="bg-transparent text-emerald-400 focus:outline-none focus:bg-emerald-400/10 transition-colors h-full px-1 w-full max-w-[250px] disabled:opacity-50 placeholder:text-emerald-900/50"
                       />
                       <span className="text-emerald-400">"</span><span className="text-zinc-500">,</span>
@@ -110,7 +110,7 @@ export const ContactSection = () => {
                         name="email" 
                         required 
                         disabled={status === 'loading' || status === 'success'}
-                        placeholder="john@example.com"
+                        placeholder="Enter Your Email "
                         className="bg-transparent text-emerald-400 focus:outline-none focus:bg-emerald-400/10 transition-colors h-full px-1 w-full max-w-[250px] disabled:opacity-50 placeholder:text-emerald-900/50"
                       />
                       <span className="text-emerald-400">"</span><span className="text-zinc-500">,</span>
