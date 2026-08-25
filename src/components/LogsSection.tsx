@@ -14,7 +14,7 @@ import {
   CalendarDays,
 } from 'lucide-react';
 
-const SHOW_PRIVATE_REPOS = true; 
+const SHOW_PRIVATE_REPOS = true;
 type RawCommit = {
   repoName: string;
   isPrivate: boolean;
@@ -79,42 +79,64 @@ async function fetchGithubData(username: string, token: string) {
             }
           }
         }
+        repositories(first: 5, orderBy: { field: PUSHED_AT, direction: DESC }, ownerAffiliations: OWNER) {
+          nodes {
+            name
+            isPrivate
+          }
+        }
       }
     }
   `;
 
-  const [graphRes, commitsRes] = await Promise.all([
-    fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ query, variables: { login: username } }),
-    }),
-    fetch(
-      `https://api.github.com/search/commits?q=author:${encodeURIComponent(
-        username
-      )}&sort=committer-date&order=desc&per_page=10`,
-      {
-        headers: {
-          ...headers,
-          Accept: 'application/vnd.github.cloak-preview+json',
-        },
-      }
-    ),
-  ]);
-
+  const graphRes = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ query, variables: { login: username } }),
+  });
   const graphData = await graphRes.json();
-  const commitsData = await commitsRes.json();
+
   const calendar =
     graphData?.data?.user?.contributionsCollection?.contributionCalendar ?? null;
-  const items = (commitsData.items || []) as any[];
+  const repoNodes = (graphData?.data?.user?.repositories?.nodes || []) as any[];
+  const perRepoCommits = await Promise.all(
+    repoNodes.map(async (repo) => {
+      try {
+        const res = await fetch(
+          `https://api.github.com/repos/${username}/${repo.name}/commits?author=${encodeURIComponent(
+            username
+          )}&per_page=5`,
+          { headers }
+        );
+        const data = await res.json();
+        if (!Array.isArray(data)) return [];
+
+        return data.map((item: any) => ({
+          repoName: repo.name as string,
+          isPrivate: Boolean(repo.isPrivate),
+          message: (item.commit?.message ?? '').split('\n')[0] as string,
+          hash: (item.sha ?? '').substring(0, 7) as string,
+          date: new Date(item.commit?.author?.date ?? Date.now()).toISOString(),
+          statsUrl: item.url as string,
+        }));
+      } catch {
+        return [];
+      }
+    })
+  );
+
+  const topCommits = perRepoCommits
+    .flat()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5);
   const rawCommits: RawCommit[] = await Promise.all(
-    items.map(async (item) => {
+    topCommits.map(async (c) => {
       let additions = 0;
       let deletions = 0;
       let files = 0;
 
       try {
-        const statRes = await fetch(item.url, { headers });
+        const statRes = await fetch(c.statsUrl, { headers });
         const statData = await statRes.json();
         additions = statData.stats?.additions ?? 0;
         deletions = statData.stats?.deletions ?? 0;
@@ -123,11 +145,11 @@ async function fetchGithubData(username: string, token: string) {
       }
 
       return {
-        repoName: item.repository?.name ?? 'unknown',
-        isPrivate: Boolean(item.repository?.private),
-        message: (item.commit?.message ?? '').split('\n')[0],
-        hash: (item.sha ?? '').substring(0, 7),
-        date: new Date(item.commit?.author?.date ?? Date.now()).toISOString(),
+        repoName: c.repoName,
+        isPrivate: c.isPrivate,
+        message: c.message,
+        hash: c.hash,
+        date: c.date,
         additions,
         deletions,
         files,
@@ -137,6 +159,7 @@ async function fetchGithubData(username: string, token: string) {
 
   return { rawCommits, calendar };
 }
+
 const getCachedGithubData = unstable_cache(
   async () => {
     const username = process.env.GITHUB_USERNAME;
@@ -220,8 +243,10 @@ export const LogsSection = async () => {
   );
 
   const latestCommit = commits[0];
+
   const recentAdditions = commits.reduce((acc, curr) => acc + curr.additions, 0);
   const recentDeletions = commits.reduce((acc, curr) => acc + curr.deletions, 0);
+
   const allWeeks = heatmap?.weeks || [];
   const recentWeeks = allWeeks.slice(-6);
   const currentStreak = computeCurrentStreak(allWeeks);
@@ -325,7 +350,6 @@ export const LogsSection = async () => {
             </div>
           </div>
         </div>
-
         <div className="flex-1 flex items-center justify-center gap-6 border-l border-[#141417] px-4">
           <div className="space-y-1 text-center">
             <span className="text-[8px] text-zinc-500 tracking-widest block uppercase">Current Streak</span>
@@ -340,7 +364,6 @@ export const LogsSection = async () => {
             </span>
           </div>
         </div>
-
         <div className="flex flex-col justify-center gap-3 border-l border-[#141417] pl-4 shrink-0 min-w-[80px]">
           <div className="space-y-1">
             <span className="text-[8px] text-zinc-500 tracking-widest block uppercase">Lines Added</span>
@@ -406,6 +429,7 @@ export const LogsSection = async () => {
           </p>
           <p className="text-[10px] text-zinc-500 mt-6">- Ashmit Kumar</p>
         </div>
+
         <div className="lg:col-span-4 relative flex justify-center items-center z-0 min-h-[250px]">
           <div className="absolute inset-0 w-full h-full opacity-60 mix-blend-screen pointer-events-none">
             <Image src="/hero-image.png" alt="Logs Avatar" fill className="object-cover object-right scale-110" />
@@ -449,6 +473,11 @@ export const LogsSection = async () => {
                         <span className="text-[8px] border border-purple-500/30 bg-purple-500/10 text-purple-400 px-1.5 py-0.5 uppercase tracking-widest rounded-sm">
                           COMMIT
                         </span>
+                        {commit.isPrivate && (
+                          <span className="text-[8px] border border-zinc-700 text-zinc-500 px-1.5 py-0.5 uppercase tracking-widest rounded-sm">
+                            PRIVATE
+                          </span>
+                        )}
                       </div>
                       <p className="text-[11px] text-zinc-400 font-sans truncate">{commit.rephrasedMessage}</p>
                     </div>
@@ -622,7 +651,7 @@ export const LogsSection = async () => {
                   alt="Ashmit's signature"
                   width={160}
                   height={56}
-                  className="h-auto w-[180px]"
+                  className="h-auto w-[140px] object-contain invert opacity-90"
                 />
               </div>
             </div>
